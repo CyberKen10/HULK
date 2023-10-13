@@ -1,0 +1,30 @@
+D:\Hulk\bin\Debug\net6.0\Hulk.exe
+D:\Hulk\bin\Debug\net6.0\Hulk.deps.json
+D:\Hulk\bin\Debug\net6.0\Hulk.runtimeconfig.json
+D:\Hulk\bin\Debug\net6.0\Hulk.dll
+D:\Hulk\bin\Debug\net6.0\Hulk.pdb
+D:\Hulk\obj\Debug\net6.0\Hulk.csproj.AssemblyReference.cache
+D:\Hulk\obj\Debug\net6.0\Hulk.GeneratedMSBuildEditorConfig.editorconfig
+D:\Hulk\obj\Debug\net6.0\Hulk.AssemblyInfoInputs.cache
+D:\Hulk\obj\Debug\net6.0\Hulk.AssemblyInfo.cs
+D:\Hulk\obj\Debug\net6.0\Hulk.csproj.CoreCompileInputs.cache
+D:\Hulk\obj\Debug\net6.0\Hulk.dll
+D:\Hulk\obj\Debug\net6.0\refint\Hulk.dll
+D:\Hulk\obj\Debug\net6.0\Hulk.pdb
+D:\Hulk\obj\Debug\net6.0\Hulk.genruntimeconfig.cache
+D:\Hulk\obj\Debug\net6.0\ref\Hulk.dll
+D:\Pruebas\Pruebas Hulk\bin\Debug\net6.0\Hulk.exe
+D:\Pruebas\Pruebas Hulk\bin\Debug\net6.0\Hulk.deps.json
+D:\Pruebas\Pruebas Hulk\bin\Debug\net6.0\Hulk.runtimeconfig.json
+D:\Pruebas\Pruebas Hulk\bin\Debug\net6.0\Hulk.dll
+D:\Pruebas\Pruebas Hulk\bin\Debug\net6.0\Hulk.pdb
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\Hulk.csproj.AssemblyReference.cache
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\Hulk.GeneratedMSBuildEditorConfig.editorconfig
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\Hulk.AssemblyInfoInputs.cache
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\Hulk.AssemblyInfo.cs
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\Hulk.csproj.CoreCompileInputs.cache
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\Hulk.dll
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\refint\Hulk.dll
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\Hulk.pdb
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\Hulk.genruntimeconfig.cache
+D:\Pruebas\Pruebas Hulk\obj\Debug\net6.0\ref\Hulk.dll
