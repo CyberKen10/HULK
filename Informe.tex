@@ -1,0 +1,347 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{graphicx}
+\geometry{a4paper, left=1in, right=1in, top=1in, bottom=1in}
+
+\title{Informe del Hulk}
+\author{Kendry Javier del Pino Barbosa}
+\date{\today}
+
+% Definición de colores para resaltar el texto
+\definecolor{keywordcolor}{RGB}{0,0,255} % Azul para palabras clave
+\definecolor{stringcolor}{RGB}{163,21,21} % Rojo para cadenas de texto
+\definecolor{commentcolor}{RGB}{0,128,0} % Verde para comentarios
+\definecolor{classcolor}{RGB}{0,0,0} % Negro para nombres de clases
+\definecolor{typecolor}{RGB}{139,0,139} % Púrpura para tipos de datos
+\definecolor{operatorcolor}{RGB}{128,0,128} % Morado para operadores
+\definecolor{methodcolor}{RGB}{255,0,0} % Rojo para nombres de métodos
+% Definir colores personalizados
+\definecolor{fieldcolor}{RGB}{0,128,0} % Verde para campos (variables)
+\definecolor{constructorcolor}{RGB}{255,69,0} % Naranja para constructores
+\definecolor{methodcolor}{RGB}{0,0,255} % Azul para nombres de métodos
+
+\newcommand{\subclassed}[1]{\textcolor{classcolor}{\textbf{- #1}}}
+
+\lstset{
+    basicstyle=\ttfamily,
+    keywordstyle=\color{keywordcolor},
+    stringstyle=\color{stringcolor},
+    commentstyle=\color{commentcolor},
+    morekeywords={private, public, class, while, if, else, int, double, throw, char, continue},
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+Este informe describe el funcionamiento un de un compilador realizado en el lenguaje C\# para el lenguaje \lstinline{Hulk}. A continuación se mostrará el funcionamiento de la biblioteca de clases formada para su correcto funcionamiento. 
+\section{Clase \textcolor{classcolor}{Lexer}}
+La clase \textcolor{classcolor}{Lexer} se encarga de analizar una cadena de código fuente y dividirla en tokens. A continuación, se describen los principales componentes y métodos de la clase:
+
+\begin{itemize}[left=0pt]
+    \item \textcolor{fieldcolor}{\lstinline{private string input}}: Un campo privado que almacena la cadena de código fuente de entrada.
+
+    \item \textcolor{fieldcolor}{\lstinline{public List<Token> tokens}}: Una lista que almacena los tokens encontrados durante el análisis.
+
+    \item \textcolor{fieldcolor}{\lstinline{private int currentPosition}}: Un campo que mantiene un seguimiento de la posición actual en la cadena de entrada durante el análisis.
+
+    \item \textcolor{constructorcolor}{\lstinline{public Lexer(string input)}}: El constructor de la clase que recibe la cadena de código fuente como parámetro e inicializa los campos de la clase.
+
+    \item \textcolor{methodcolor}{\lstinline{public Token[] Tokenize()}}: El método principal que inicia el proceso de análisis léxico. Recorre la cadena de entrada carácter por carácter y genera tokens según las reglas definidas.
+    \item \textcolor{methodcolor}{\lstinline{private bool IsUnaryOperator()}}: Un método privado que verifica si el carácter actual es un operador unario válido.
+
+    \item \textcolor{methodcolor}{\lstinline{private Token ScanNumber()}}: Un método privado que escanea y reconoce un número en la cadena de entrada.
+
+    \item \textcolor{methodcolor}{\lstinline{private Token ScanIdentifierOrKeyword()}}: Un método privado que escanea y reconoce identificadores o palabras clave en la cadena de entrada.
+
+    \item \textcolor{methodcolor}{\lstinline{private bool IsOperator(char c)}}: Un método privado que verifica si un carácter es un operador válido.
+
+    \item \textcolor{methodcolor}{\lstinline{private bool MatchArrow()}}: Un método privado que verifica si el carácter actual es parte de la flecha "=>".
+
+    \item \textcolor{methodcolor}{\lstinline{private bool MatchKeyword(string keyword)}}: Un método privado que verifica si la cadena actual coincide con una palabra clave específica.
+
+    \item \textcolor{methodcolor}{\lstinline{private Token ScanUnaryOperator()}}: Un método privado que escanea y reconoce operadores unarios en la cadena de entrada.
+
+    \item \textcolor{methodcolor}{\lstinline{private Token ScanString()}}: Un método privado que escanea y reconoce cadenas de texto en la cadena de entrada.
+\end{itemize}
+\section{Clase \textcolor{classcolor}{Token}}
+La clase \textcolor{classcolor}{Token} contiene una enumeración de tipos de tokens y una clase \textcolor{classcolor}{Token} para representar los tokens. A continuación, se describen los elementos de la clase:
+
+\begin{itemize}[left=0pt]
+    \item \textcolor{fieldcolor}{\lstinline{enum TokenType}}: Una enumeración que define los tipos de tokens utilizados en el analizador léxico. Estos tipos incluyen números, identificadores, operadores, palabras clave y otros.
+
+    \item \textcolor{classcolor}{\lstinline{class Token}}: Una clase que representa un token y tiene propiedades para el tipo de token, su valor y la longitud del valor.
+
+    \item \textcolor{constructorcolor}{\lstinline{public Token(TokenType type, string value)}}: El constructor de la clase \textcolor{classcolor}{Token} que recibe el tipo y el valor del token y los asigna a las propiedades de la clase.
+
+    \item \textcolor{methodcolor}{\lstinline{public override string ToString()}}: Un método sobrecargado que devuelve una representación en cadena del token en el formato \textcolor{methodcolor}{(Tipo, 'Valor')}.
+
+\end{itemize}
+
+\section{Clase \textcolor{classcolor}{Parser}}
+La clase \textcolor{classcolor}{Parser} se encuentra en el namespace \textcolor{classcolor}{Hulk} y tiene la responsabilidad de analizar tokens y generar el árbol sintáctico de un programa. A continuación, se describen los elementos de la clase:
+
+\begin{itemize}[left=0pt]
+    \item \textcolor{fieldcolor}{\lstinline{private Lexer lexer}}: Un campo privado que almacena una instancia de la clase \textcolor{classcolor}{Lexer} para analizar tokens.
+
+    \item \textcolor{fieldcolor}{\lstinline{private Token[] tokens}}: Un campo privado que almacena la lista de tokens generada por el analizador léxico.
+
+    \item \textcolor{fieldcolor}{\lstinline{private int currentTokenIndex}}: Un campo privado que lleva un seguimiento del índice del token actual durante el análisis.
+
+    \item \textcolor{fieldcolor}{\lstinline{private Dictionary<string, Node> variables}}: Un diccionario que almacena variables y sus valores.
+
+    \item \textcolor{fieldcolor}{\lstinline{private Dictionary<string, FunctionDeclarationNode> userDefinedFunctions}}: Un diccionario que almacena funciones definidas por el usuario.
+
+    \item \textcolor{fieldcolor}{\lstinline{List<string> parameters}}: Una lista que almacena los parámetros de la función actualmente en análisis.
+
+    \item \textcolor{constructorcolor}{\lstinline{public Parser(Lexer lexer, Dictionary<string, FunctionDeclarationNode> userDefinedFunctions)}}: El constructor de la clase que recibe una instancia de \textcolor{classcolor}{Lexer} y un diccionario de funciones definidas por el usuario.
+
+    \item \textcolor{methodcolor}{\lstinline{public Node Parse()}}: Un método público que inicia el análisis y devuelve un nodo raíz del árbol sintáctico.
+
+    \item \textcolor{methodcolor}{\lstinline{private Node ParseStatements()}}: Un método privado que analiza y devuelve una secuencia de declaraciones.
+
+    \item \textcolor{methodcolor}{\lstinline{private Node ParseStatement()}}: Un método privado que analiza y devuelve una declaración.
+
+    \item \textcolor{methodcolor}{\lstinline{private Node ParseFunctionDeclaration()}}: Un método privado que analiza y devuelve una declaración de función definida por el usuario.
+
+    \item \textcolor{methodcolor}{\lstinline{private Node ParseExpression()}}: Un método privado que analiza y devuelve una expresión.
+
+    \item \textcolor{methodcolor}{\lstinline{private Node ParseLetIn()}}: Un método privado que analiza y devuelve una declaración \textcolor{classcolor}{LetIn}.
+
+    \item \textcolor{methodcolor}{\lstinline{private Node ParseTerm()}}: Un método privado que analiza y devuelve un término en una expresión.
+
+    \item \textcolor{methodcolor}{\lstinline{private Node ParseParenthesizedExpression()}}: Un método privado que analiza y devuelve una expresión entre paréntesis.
+
+    \item \textcolor{methodcolor}{\lstinline{private Node ParseFactor()}}: Un método privado que analiza y devuelve un factor en una expresión.
+
+    \item \textcolor{methodcolor}{\lstinline{private bool Match(TokenType type, string value = null)}}: Un método privado que verifica si el token actual coincide con un tipo y un valor opcional.
+
+    \item \textcolor{methodcolor}{\lstinline{private bool Expect(TokenType type, string value = null)}}: Un método privado que verifica si el token actual coincide con un tipo y un valor opcional, y lanza una excepción si no coincide.
+
+    \item \textcolor{methodcolor}{\lstinline{private Token Consume()}}: Un método privado que consume el token actual y avanza al siguiente.
+
+\end{itemize}
+\section{Clase \textcolor{classcolor}{Node}}
+
+La clase abstracta \textcolor{classcolor}{Node} es la clase base en la jerarquía de clases relacionadas con el análisis y evaluación de nodos en un árbol sintáctico. Define dos métodos clave:
+
+\begin{itemize}
+    \item \lstinline{public abstract object Evaluate()}: Este método es abstracto y debe ser implementado por las clases derivadas. Representa la lógica para evaluar un nodo particular en el árbol sintáctico y devuelve un resultado.
+
+    \item \lstinline{public virtual object EvaluateWithVariables(Dictionary<string, Node> variables)}: Este método virtual proporciona una forma de evaluar un nodo teniendo en cuenta un diccionario de variables. Por defecto, simplemente llama a \lstinline{Evaluate()}, pero las clases derivadas pueden sobrescribirlo para considerar variables.
+
+\end{itemize}
+\section{Clase \subclassed{NumberNode} : Node}
+
+La clase \subclassed{NumberNode} hereda de la clase \textcolor{classcolor}{Node} y se utiliza para representar nodos que contienen números. Tiene un campo \textcolor{fieldcolor}{Value} que almacena un token numérico.
+
+\begin{itemize}
+    \item \lstinline{public Token Value ( get; )}: Un campo que almacena el valor numérico en forma de token.
+
+    \item \lstinline{public NumberNode(Token value)}: Un constructor que recibe un token numérico y lo asigna al campo \lstinline{Value}.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \textcolor{classcolor}{Node}. En este caso, realiza la evaluación del nodo numérico y devuelve el valor como un entero si es convertible, como un número decimal si es convertible o como una cadena si no es convertible a número.
+
+\end{itemize}
+\section{Clase \subclassed{StringNode} : Node}
+
+La clase \subclassed{StringNode} hereda de la clase \textcolor{classcolor}{Node} y se utiliza para representar nodos que contienen cadenas de texto. Tiene un campo \textcolor{fieldcolor}{Value} que almacena un token de cadena.
+
+\begin{itemize}
+    \item \lstinline{public Token Value (get;)}: Un campo que almacena el valor de la cadena en forma de token.
+
+    \item \lstinline{public StringNode(Token value)}: Un constructor que recibe un token de cadena y lo asigna al campo \lstinline{Value}.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \textcolor{classcolor}{Node}. En este caso, simplemente devuelve el valor de la cadena tal como está, sin cambios.
+
+    \item \lstinline{public override object EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \textcolor{classcolor}{Node}. Al igual que el método \lstinline{Evaluate()}, devuelve el valor de la cadena tal como está, sin cambios. Esta implementación considera un diccionario de variables, pero no las utiliza en la evaluación de la cadena.
+\end{itemize}
+\section{Clase \subclassed{VariableNode} : Node}
+
+La clase \subclassed{VariableNode} hereda de la clase \textcolor{classcolor}{Node} y se utiliza para representar nodos que contienen nombres de variables. Tiene un campo \textcolor{fieldcolor}{VariableName} que almacena un token de nombre de variable.
+
+\begin{itemize}
+    \item \lstinline{public Token VariableName (get;)}: Un campo que almacena el nombre de la variable en forma de token.
+
+    \item \lstinline{public VariableNode(Token variableName)}: Un constructor que recibe un token de nombre de variable y lo asigna al campo \lstinline{VariableName}.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \textcolor{classcolor}{Node}. En este caso, simplemente devuelve el token de nombre de variable.
+
+    \item \lstinline{public override object EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \textcolor{classcolor}{Node}. En este método, se busca el valor de la variable en el diccionario de variables proporcionado como argumento. Si la variable está definida, devuelve el valor correspondiente. Si no está definida, se lanza una excepción indicando que la variable no está definida.
+\end{itemize}
+\section{Clase \subclassed{UnaryOperationNode} : Node}
+
+La clase \subclassed{UnaryOperationNode} hereda de la clase \textcolor{classcolor}{Node} y se utiliza para representar nodos que contienen operaciones unarias. Tiene un campo \textcolor{fieldcolor}{Operator} que almacena el operador unario y un campo \textcolor{fieldcolor}{Right} que representa el operando de la operación.
+
+\begin{itemize}
+    \item \lstinline{public string Operator (get;)}: Un campo que almacena el operador unario.
+
+    \item \lstinline{public Node Right (get;)}: Un campo que almacena el operando de la operación.
+
+    \item \lstinline{public UnaryOperationNode(string oper, Node right)}: Un constructor que recibe el operador unario y el operando de la operación y los asigna a los campos \lstinline{Operator} y \lstinline{Right} respectivamente.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \textcolor{classcolor}{Node}. En este método, se evalúa el operando derecho y se aplica el operador unario correspondiente. En este caso, el operador puede ser el signo negativo ("-"), y se verifica si el operando es un número entero o decimal para aplicar la operación adecuada. El resultado se devuelve como un objeto.
+\end{itemize}
+\section{Clase \subclassed{MathFunctionNode} : Node}
+
+La clase \subclassed{MathFunctionNode} hereda de la clase \textcolor{classcolor}{Node} y se utiliza para representar nodos que contienen funciones matemáticas. Tiene un campo \textcolor{fieldcolor}{FunctionName} que almacena el nombre de la función y un campo \textcolor{fieldcolor}{Argument} que representa el argumento de la función.
+
+\begin{itemize}
+    \item \lstinline{public string FunctionName (get;)}: Un campo que almacena el nombre de la función.
+
+    \item \lstinline{public Node Argument (get;)}: Un campo que almacena el argumento de la función.
+
+    \item \lstinline{public MathFunctionNode(string functionName, Node argument)}: Un constructor que recibe el nombre de la función y el argumento de la función, y los asigna a los campos \lstinline{FunctionName} y \lstinline{Argument} respectivamente.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \textcolor{classcolor}{Node}. En este método, se evalúa el argumento de la función y se aplican las funciones matemáticas correspondientes. Las funciones admitidas son "cos" (coseno), "sen" (seno) y "log" (logaritmo natural). Se verifica el nombre de la función y se calcula el resultado utilizando la biblioteca Math de C\#. El resultado se devuelve como un objeto.
+
+    \item \lstinline{public override object EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \textcolor{classcolor}{Node}. En este método, se evalúa el argumento de la función con variables y se aplican las funciones matemáticas correspondientes de manera similar al método \lstinline{Evaluate()}. El resultado se devuelve como un objeto.
+\end{itemize}
+\section{Clase \subclassed{PrintNode} : \subclassed{Node}}
+
+La clase \subclassed{PrintNode} hereda de la clase \subclassed{Node} y se utiliza para representar nodos que imprimen valores en la consola. Tiene un campo \textcolor{fieldcolor}{Expression} que representa la expresión que se imprimirá.
+
+\begin{itemize}
+    \item \lstinline{public Node Expression (get;)}: Un campo que almacena la expresión que se imprimirá.
+
+    \item \lstinline{public PrintNode(Node expression)}: Un constructor que recibe la expresión y la asigna al campo \lstinline{Expression}.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \subclassed{Node}. En este método, se evalúa la expresión y se convierte el resultado en una cadena (string) que se imprime en la consola. Luego, el método devuelve el resultado como una cadena.
+
+    \item \lstinline{public override object EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \subclassed{Node}. En este método, se evalúa la expresión con variables si las hubiera. El resultado se mantiene sin cambios y se devuelve como está.
+\end{itemize}
+La clase \subclassed{LogFunctionNode} hereda de la clase \subclassed{Node} y se utiliza para representar nodos que calculan el logaritmo de un número en una base dada. Tiene dos campos, \textcolor{fieldcolor}{BaseExpression} que representa la base del logaritmo y \textcolor{fieldcolor}{NumberExpression} que representa el número al que se aplica el logaritmo.
+
+\begin{itemize}
+    \item \lstinline{public Node BaseExpression (get;)}: Un campo que almacena la expresión que representa la base del logaritmo.
+
+    \item \lstinline{public Node NumberExpression (get;)}: Un campo que almacena la expresión que representa el número al que se aplica el logaritmo.
+
+    \item \lstinline{public LogFunctionNode(Node baseExpression, Node numberExpression)}: Un constructor que recibe la base del logaritmo y el número al que se aplica el logaritmo, y los asigna a los campos \lstinline{BaseExpression} y \lstinline{NumberExpression} respectivamente.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \subclassed{Node}. En este método, se evalúan las expresiones de la base y el número, y se calcula el logaritmo en la base dada del número. El resultado se devuelve como un objeto.
+
+    \item \lstinline{public override object EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \subclassed{Node}. En este método, se evalúan las expresiones de la base y el número con variables si las hubiera. Luego, se calcula el logaritmo en la base dada del número. El resultado se devuelve como un objeto.
+\end{itemize}
+\section{Clase \subclassed{LetInNode} : \subclassed{Node}}
+
+La clase \subclassed{LetInNode} hereda de la clase \subclassed{Node} y se utiliza para representar nodos que declaran variables locales y luego ejecutan una declaración. Tiene dos campos, \textcolor{fieldcolor}{DeclaredVariables} que almacena las variables declaradas como un diccionario y \textcolor{fieldcolor}{Statement} que representa la declaración que se ejecutará.
+
+\begin{itemize}
+    \item \lstinline{public Dictionary<string, Node> DeclaredVariables (get;)}: Un campo que almacena las variables locales declaradas como un diccionario. La clave es el nombre de la variable y el valor es la expresión asociada.
+
+    \item \lstinline{public Node Statement (get;)}: Un campo que almacena la declaración que se ejecutará después de declarar las variables locales.
+
+    \item \lstinline{public LetInNode(Dictionary<string, Node> declaredVariables, Node statement)}: Un constructor que recibe el diccionario de variables declaradas y la declaración a ejecutar, y los asigna a los campos \lstinline{DeclaredVariables} y \lstinline{Statement} respectivamente.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \subclassed{Node}. En este método, se crea un nuevo diccionario para las variables evaluadas, se evalúan cada expresión de variable y se agregan al nuevo diccionario. Luego, se ejecuta la declaración \lstinline{Statement}. El resultado de la declaración se devuelve como un objeto.
+\end{itemize}
+\section{Clase \subclassed{IfElseNode} : \subclassed{Node}}
+
+La clase \subclassed{IfElseNode} hereda de la clase \subclassed{Node} y se utiliza para representar nodos condicionales que ejecutan una rama si una condición es verdadera y otra rama si la condición es falsa. Tiene tres campos: \textcolor{fieldcolor}{Condition} que representa la condición a evaluar, \textcolor{fieldcolor}{IfBranch} que es la rama que se ejecutará si la condición es verdadera, y \textcolor{fieldcolor}{ElseBranch} que es la rama que se ejecutará si la condición es falsa.
+
+\begin{itemize}
+    \item \lstinline{public Node Condition (get;) }: Un campo que almacena la condición a evaluar.
+
+    \item \lstinline{public Node IfBranch (get;)}: Un campo que almacena la rama que se ejecutará si la condición es verdadera.
+
+    \item \lstinline{public Node ElseBranch (get;)}: Un campo que almacena la rama que se ejecutará si la condición es falsa.
+
+    \item \lstinline{public IfElseNode(Node condition, Node ifBranch, Node elseBranch)}: Un constructor que recibe la condición, la rama para el caso verdadero y la rama para el caso falso, y las asigna a los campos \lstinline{Condition}, \lstinline{IfBranch} y \lstinline{ElseBranch} respectivamente.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \subclassed{Node}. En este método, se evalúa la condición y se verifica si el resultado es un valor booleano. Si la condición es verdadera, se ejecuta la rama \lstinline{IfBranch}, y si es falsa, se ejecuta la rama \lstinline{ElseBranch}. El resultado de la rama ejecutada se devuelve como un objeto. Si la condición no es un valor booleano, se lanza una excepción.
+
+    \item \lstinline{public override object EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \subclassed{Node}. En este método, se evalúa la condición con variables y se aplica la lógica de ejecución condicional de manera similar al método \lstinline{Evaluate()}. El resultado de la rama ejecutada se devuelve como un objeto. Si la condición no es un valor booleano, se lanza una excepción.
+\end{itemize}
+\section{Clase \subclassed{FunctionDeclarationNode} : \subclassed{Node}}
+
+La clase \subclassed{FunctionDeclarationNode} hereda de la clase \subclassed{Node} y se utiliza para representar la declaración de una función en un lenguaje de programación. Tiene tres campos: \textcolor{fieldcolor}{Name} que almacena el nombre de la función, \textcolor{fieldcolor}{Parameters} que es una lista de parámetros de la función y \textcolor{fieldcolor}{Body} que representa el cuerpo de la función.
+
+\begin{itemize}
+    \item \lstinline{public string Name ( get;)}: Un campo que almacena el nombre de la función.
+
+    \item \lstinline{public List<string> Parameters (get;)}: Un campo que almacena la lista de parámetros de la función.
+
+    \item \lstinline{public Node Body (get; )}: Un campo que almacena el cuerpo de la función.
+
+    \item \lstinline{public FunctionDeclarationNode(string name, List<string> parameters, Node body)}: Un constructor que recibe el nombre de la función, la lista de parámetros y el cuerpo de la función, y los asigna a los campos \lstinline{Name}, \lstinline{Parameters} y \lstinline{Body} respectivamente.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \subclassed{Node}. En este método, no se evalúa la función en este momento; se devuelve la propia instancia de la declaración de la función. La evaluación real de la función se realiza en su llamada.
+
+    \item \lstinline{public override object EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \subclassed{Node}. En este método, se evalúa el cuerpo de la función en el contexto de las variables proporcionadas. Se crea un nuevo diccionario para las variables locales de la función y se agregan los parámetros al diccionario local. Luego, se evalúa el cuerpo de la función en el contexto local y se devuelve el resultado.
+\end{itemize}
+\section{Clase \subclassed{BooleanNode} : \subclassed{Node}}
+
+La clase \subclassed{BooleanNode} hereda de la clase \subclassed{Node} y se utiliza para representar nodos que contienen expresiones booleanas en un lenguaje de programación. Tiene tres campos: \textcolor{fieldcolor}{left} que representa la expresión izquierda, \textcolor{fieldcolor}{operatorToken} que almacena el operador de comparación y \textcolor{fieldcolor}{right} que representa la expresión derecha.
+
+\begin{itemize}
+    \item \lstinline{public BooleanNode(Node left, Token operatorToken, Node right)}: Un constructor que recibe la expresión izquierda, el token del operador y la expresión derecha, y los asigna a los campos \lstinline{left}, \lstinline{operatorToken} y \lstinline{right} respectivamente.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \subclassed{Node}. En este método, se evalúan las expresiones en el momento necesario. Se convierten las expresiones izquierda y derecha a valores numéricos y se realiza la comparación según el operador. Los operadores admitidos son ">", "<", "==", "!=", ">=", "<=". El resultado de la comparación se devuelve como un valor booleano.
+
+    \item \lstinline{public override object EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \subclassed{Node}. En este método, se evalúan las expresiones izquierda y derecha en el contexto de las variables proporcionadas. Luego, se realiza la comparación de manera similar a \lstinline{Evaluate()}. El resultado de la comparación se devuelve como un valor booleano.
+
+\end{itemize}
+\section{Clase \subclassed{BinaryOperationNode} : \subclassed{Node}}
+
+La clase \subclassed{BinaryOperationNode} hereda de la clase \subclassed{Node} y se utiliza para representar nodos que contienen operaciones binarias en un lenguaje de programación. Tiene tres campos: \textcolor{fieldcolor}{Left} que representa la expresión izquierda, \textcolor{fieldcolor}{Operator} que almacena el operador de la operación y \textcolor{fieldcolor}{Right} que representa la expresión derecha.
+
+\begin{itemize}
+    \item \lstinline{public BinaryOperationNode(Node left, Token operatorToken, Node right)}: Un constructor que recibe la expresión izquierda, el token del operador y la expresión derecha, y los asigna a los campos \lstinline{Left}, \lstinline{Operator} y \lstinline{Right} respectivamente.
+
+    \item \lstinline{public override object Evaluate()}: Implementa el método \lstinline{Evaluate()} heredado de la clase \subclassed{Node}. En este método, se evalúan las expresiones izquierda y derecha en el momento necesario. Se realiza la operación binaria según el operador. Los operadores admitidos son "+", "-", "%", "*", "/", "^" (potenciación) y "@" (concatenación de cadenas). El resultado de la operación se devuelve como un objeto.
+
+    \item \lstinline{public override Node EvaluateWithVariables(Dictionary<string, Node> variables)}: Implementa el método \lstinline{EvaluateWithVariables()} heredado de la clase \subclassed{Node}. En lugar de evaluar los valores de las expresiones en este método, se crea un nuevo objeto \subclassed{BinaryOperationNode} con los nodos izquierdo y derecho actualizados con los resultados de la evaluación en el contexto de las variables proporcionadas.
+
+\end{itemize}
+\section{Clase \subclassed{FunctionCallNode}: \subclassed{Node}}
+
+\begin{itemize}
+        \item \lstinline{FunctionName} (string): Almacena el nombre de la función a llamar.
+        \item \lstinline{Arguments} (List<Node>): Contiene los argumentos que se pasan a la función.
+        \item \lstinline{userDefinedFunctions} (Dictionary<string, FunctionDeclarationNode>): Un diccionario que mapea nombres de funciones a sus definiciones.
+        \item \lstinline{functionCallStack} (Stack<Dictionary<object, Node>>): Una pila de diccionarios de variables locales.
+        \item \lstinline{Evaluate}: Este método evalúa la llamada a la función.
+        \item \lstinline{EvaluateWithVariables}: Este método permite evaluar la función con un conjunto personalizado de variables. Este método se utiliza principalmente para llamadas recursivas y funciona de manera similar al método \texttt{Evaluate}.
+    
+\end{itemize}
+\section{Clase \textcolor{classcolor}{Main}}
+La clase \textcolor{classcolor}{Main} es la clase principal de una aplicación en C\# que utiliza el analizador léxico y el analizador sintáctico para procesar y ejecutar código. Esta clase contiene el punto de entrada de la aplicación y coordina el proceso de análisis y ejecución del código fuente. A continuación, se describen los principales componentes y métodos de la clase:
+
+\begin{itemize}[left=0pt]
+    \item \textcolor{fieldcolor}{\lstinline{static void Main(string[] args)}}: Este es el método principal de la clase y es el punto de entrada de la aplicación. A continuación, se describe su funcionamiento:
+
+    \begin{itemize}
+        \item \textcolor{commentcolor}{}:Este método comienza mostrando un diseño estético en la consola mediante la llamada a \textcolor{methodcolor}{\lstinline{DisplayHulkCompilerBanner()}}. El banner de la aplicación se muestra en morado sobre un fondo negro.
+
+        \item \textcolor{commentcolor}{Variables locales}: En este método se declara una variable \textcolor{fieldcolor}{\lstinline{userDefinedFunctions}} de tipo \textcolor{fieldcolor}{\lstinline{Dictionary<string, FunctionDeclarationNode>}} que se utiliza para almacenar las funciones definidas por el usuario. Este diccionario asocia nombres de funciones con objetos de tipo \textcolor{classcolor}{\lstinline{FunctionDeclarationNode}}.
+
+        \item \textcolor{commentcolor}{Bucle infinito}: Luego, se inicia un bucle infinito con \textcolor{fieldcolor}{\lstinline{while (true)}} que permite que la aplicación acepte entrada del usuario de forma continua hasta que el usuario ingrese "exit". El bucle se encarga de realizar la siguiente operación:
+
+        \begin{itemize}
+            \item \textcolor{commentcolor}{Interfaz de usuario}: Establece el color del texto en morado y muestra un indicador ">> " en la consola para indicar que la aplicación está esperando una entrada del usuario.
+
+            \item \textcolor{commentcolor}{Entrada de usuario}: Lee la entrada del usuario desde la consola mediante \textcolor{fieldcolor}{\lstinline{Console.ReadLine()}} y almacena la entrada en la variable \textcolor{fieldcolor}{\lstinline{input}}. Si el usuario ingresa "exit", el bucle se interrumpe y la aplicación sale.
+
+            \item \textcolor{commentcolor}{Análisis léxico y sintáctico}: Se intenta realizar el análisis léxico y sintáctico del código fuente ingresado por el usuario. Se crea un objeto \textcolor{classcolor}{\lstinline{Lexer}} y un objeto \textcolor{classcolor}{\lstinline{Parser}} para llevar a cabo estos procesos. Se parsea la entrada del usuario y se obtiene un árbol de sintaxis abstracta (\textcolor{fieldcolor}{\lstinline{Node}}).
+
+            \item \textcolor{commentcolor}{Evaluación}: Se evalúa el árbol de sintaxis abstracta obtenido y se almacena el resultado en la variable \textcolor{fieldcolor}{\lstinline{result}}.
+
+            \item \textcolor{commentcolor}{Salida}: Se muestra el resultado en la consola en color amarillo. Dependiendo del tipo de resultado (\textcolor{fieldcolor}{\lstinline{int}}, \textcolor{fieldcolor}{\lstinline{double}}, \textcolor{fieldcolor}{\lstinline{string}}, etc.), se muestra de manera apropiada.
+
+            \item \textcolor{commentcolor}{Manejo de funciones definidas por el usuario}: Si el resultado es una declaración de función, se agrega al diccionario \textcolor{fieldcolor}{\lstinline{userDefinedFunctions}} asociando el nombre de la función con su definición.
+
+            \item \textcolor{commentcolor}{Manejo de errores}: En caso de que se produzca una excepción durante el análisis o la evaluación, se captura la excepción y se muestra un mensaje de error en rojo en la consola.
+
+        \end{itemize}
+    \end{itemize}
+
+    \item \textcolor{methodcolor}{\lstinline{static void DisplayHulkCompilerBanner()}}: Este método se encarga de mostrar un banner de bienvenida estilizado en la consola. El banner se muestra en morado sobre un fondo negro y contiene el nombre de la aplicación.
+
+\end{itemize}
+\end{document}
